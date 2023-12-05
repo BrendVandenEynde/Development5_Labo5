@@ -5,29 +5,27 @@
 </template>
 
 <script setup>
-    import { ref, reactive, onMounted} from 'vue';
+import { ref, reactive, onMounted} from 'vue';
 
-    const emit = defineEmits(["update:video"]);    
+const emit = defineEmits(["update:video"]);    
 
-    let videoUrl = ref("");
+let videoUrl = ref("");
 
-    let videos = reactive({
-        data: [
-
-        ],
+let videos = reactive({
+    data: [],
+});
+onMounted(() => {
+    fetch("https://api.jsonbin.io/v3/b/6548ef9954105e766fcc2c15")
+    .then((res) => res.json())
+    .then((data) => {
+        videos.data = data.record.videos;
+        const videoData = videos.data[0];
+        videoUrl.value = videoData.video;
+        emit("update:video", videoData);
     });
-    onMounted(() => {
-        fetch("https://api.jsonbin.io/v3/b/6548ef9954105e766fcc2c15")
-        .then((res) => res.json())
-        .then((data) => {
-            videos.data = data.record.videos;
-            videoUrl.value = videos.data[0].video;
-            emit("update:video", videos.data[0]);
-            
-        });
-    });
-
+});
 </script>
+
 
 <style scoped>
     video{

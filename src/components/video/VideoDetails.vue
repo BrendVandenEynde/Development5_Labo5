@@ -1,12 +1,12 @@
 <template>
     <div>
-        <h3>Username</h3>
+        <h3>{{ username }}</h3>
         <p>{{ description }}</p>
     </div>
 </template>
 
 <script setup>
-    const props = defineProps(["description"]);
+    const props = defineProps(["description", "username"]);
 </script>
 
 <style scoped>
