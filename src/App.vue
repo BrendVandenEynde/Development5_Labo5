@@ -1,5 +1,5 @@
 <script setup>
-  import VideoPlayer from './components/video/VideoPlayer.vue';
+  import VideoPlayer from '../src/components/video/VideoPlayer.vue';
   import VideoDetails from './components/video/VideoDetails.vue';
   import Chat from './components/chat/Chat.vue';
   import { ref, onMounted, reactive } from 'vue';
