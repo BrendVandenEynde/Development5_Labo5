@@ -8,37 +8,42 @@
   let newDescription = ref("Default description");
   let messages = reactive([]);
 
- // Fetch messages on component mount
-onMounted(async () => {
-  try {
-    const response = await fetch('https://lab5-p379.onrender.com/api/v1/messages/');
-    const data = await response.json();
-    messages.value = data;
-  } catch (error) {
-    console.error('Error fetching messages:', error);
-  }
-});
+  // Fetch messages on component mount
+  onMounted(async () => {
+    try {
+      const response = await fetch('https://lab5-p379.onrender.com/api/v1/messages/');
+      const data = await response.json();
+      messages.value = data;
+    } catch (error) {
+      console.error('Error fetching messages:', error);
+    }
+  });
 
-// Function to post a new message
-const postNewMessage = async (newMessage) => {
-  try {
-    const response = await fetch('https://lab5-p379.onrender.com/api/v1/messages/', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(newMessage),
-    });
+  // Function to post a new message
+  const postNewMessage = async (newMessage) => {
+    try {
+      const response = await fetch('https://lab5-p379.onrender.com/api/v1/messages/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newMessage),
+      });
 
-    const data = await response.json();
-    // Update the messages array with the new message
-    messages.unshift(data);
-  } catch (error) {
-    console.error('Error posting message:', error);
-  }
-};
+      const data = await response.json();
+      // Update the messages array with the new message
+      messages.unshift(data);
+    } catch (error) {
+      console.error('Error posting message:', error);
+    }
+  };
 
-
+  // Handle the video update event
+  const updateVideo = (newVideoData) => {
+    // Handle the updated video data
+    console.log('Received updated video data:', newVideoData);
+    // Update other components or perform additional logic
+  };
 </script>
 
 <template>
