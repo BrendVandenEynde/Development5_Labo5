@@ -1,64 +1,71 @@
 <template>
     <div>
-        <ul >
-            <li v-for="m in allMessages.data">
-                <strong>{{ m.user }}</strong>
-                <div>
-                    {{ m.text  }}
-                </div>
-            </li>
-
-        </ul>
-    </div>
-
-    <div>
-        <input v-model="message" type="text" placeholder="Type your mesage here" @keyup.input.enter="sendMessage">
+      <ul>
+        <li v-for="message in allMessages" :key="message._id">
+          <strong>{{ message.user }}</strong>
+          <div>{{ message.text }}</div>
+        </li>
+      </ul>
+  
+      <div>
+        <input v-model="newMessageText" type="text" placeholder="Type your message here" @keyup.enter="sendMessage">
         <button @click="sendMessage">Send</button>
+      </div>
     </div>
-</template>
-
-<script setup>
-    import { ref, reactive, onMounted} from 'vue';
-
-    let message = ref("");
-
-    let allMessages = reactive({
-        data: {
-                user:{
-                    name: "user1",
-                    text: "Hello"
-                    },
-                user2:{
-                    name: "user2",
-                    text: "Hi"
-                    },
-            },
-    });
-
-    function sendMessage() {
-        if(message.value !== ""){
-            allMessages.data.push(message.value);
-        }
+  </template>
+  
+  <script setup>
+  import { ref, reactive, onMounted } from 'vue';
+  
+  let newMessageText = ref('');
+  let allMessages = reactive([]);
+  
+  // Fetch messages from the API on component mount
+  onMounted(async () => {
+    await fetchMessages();
+  });
+  
+  // Function to fetch messages from the API
+  async function fetchMessages() {
+    try {
+      const response = await fetch('https://lab5-p379.onrender.com/api/v1/messages/');
+      const data = await response.json();
+      allMessages = data; // Assuming the API returns an array of messages
+    } catch (error) {
+      console.error('Error fetching messages:', error);
     }
-
-    //get messages from https://dev5-lab4.onrender.com/api/v1/messages and add the user and the text to allMessages
-    onMounted(() => {
-        fetch('https://dev5-lab4.onrender.com/api/v1/messages')
-        .then(response => response.json())
-        .then(data => {
-            console.log(data.data);
-            allMessages.data = data.data[0].messages;
-            console.log(allMessages.data);
-        })
-        .catch(error => {
-            console.error(error);
-        })
-
-    });
-
-
-</script>
-
-<style scoped>
-
-</style>
+  }
+  
+  // Function to post a new message to the API
+  async function sendMessage() {
+    if (newMessageText.trim() !== '') {
+      const newMessage = {
+        user: 'Clueless', // Replace with actual username or get it dynamically
+        text: newMessageText,
+      };
+  
+      try {
+        const response = await fetch('https://lab5-p379.onrender.com/api/v1/messages/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(newMessage),
+        });
+  
+        const data = await response.json();
+        // Update the messages array with the new message
+        allMessages.unshift(data);
+        // Clear the input field
+        newMessageText = '';
+      } catch (error) {
+        console.error('Error posting message:', error);
+      }
+    }
+  }
+  </script>
+  
+  <style scoped>
+  /* Your styles go here */
+  </style>
+  
