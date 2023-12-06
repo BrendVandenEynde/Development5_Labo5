@@ -15,10 +15,10 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted } from 'vue';
+import { ref, onMounted } from 'vue';
 
 let newMessageText = ref('');
-let allMessages = reactive([]);
+let allMessages = ref([]); // Use a ref instead of reactive for the messages array
 
 // Fetch messages from the API on component mount
 onMounted(async () => {
@@ -30,7 +30,13 @@ async function fetchMessages() {
   try {
     const response = await fetch('https://lab5-p379.onrender.com/api/v1/messages/');
     const data = await response.json();
-    allMessages.value = data; // Use .value property for ref
+
+    // Ensure data is an array before assigning
+    if (Array.isArray(data)) {
+      allMessages.value = data;
+    } else {
+      console.error('Invalid API response. Expected an array of messages.');
+    }
   } catch (error) {
     console.error('Error fetching messages:', error);
   }
@@ -55,9 +61,9 @@ async function sendMessage() {
 
       const data = await response.json();
       // Update the messages array with the new message
-      allMessages.value.unshift(data); // Use .value property for ref
+      allMessages.value.unshift(data);
       // Clear the input field
-      newMessageText.value = ''; // Use .value property for ref
+      newMessageText.value = '';
     } catch (error) {
       console.error('Error posting message:', error);
     }
