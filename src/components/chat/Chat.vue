@@ -18,7 +18,7 @@
 import { ref, onMounted } from 'vue';
 
 let newMessageText = ref('');
-let allMessages = ref([]); // Use a ref instead of reactive for the messages array
+let allMessages = ref([]);
 
 // Fetch messages from the API on component mount
 onMounted(async () => {
@@ -46,7 +46,7 @@ async function fetchMessages() {
 async function sendMessage() {
   if (newMessageText.value.trim() !== '') {
     const newMessage = {
-      user: 'Clueless', // Replace with actual username or get it dynamically
+      user: 'Clueless',
       text: newMessageText.value,
     };
 
@@ -59,11 +59,16 @@ async function sendMessage() {
         body: JSON.stringify(newMessage),
       });
 
-      const data = await response.json();
-      // Update the messages array with the new message
-      allMessages.value.unshift(data);
-      // Clear the input field
-      newMessageText.value = '';
+      const responseData = await response.json();
+
+      if (response.ok) {
+        // Update the messages array with the new message
+        allMessages.value = [...allMessages.value, responseData.data];
+        // Clear the input field
+        newMessageText.value = '';
+      } else {
+        console.error('Error posting message:', responseData);
+      }
     } catch (error) {
       console.error('Error posting message:', error);
     }
