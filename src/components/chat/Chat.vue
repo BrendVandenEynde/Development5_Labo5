@@ -1,5 +1,6 @@
 <template>
   <div>
+    <!-- Display messages using a loop -->
     <ul>
       <li v-for="message in allMessages" :key="message._id">
         <strong>{{ message.user }}</strong>
@@ -7,6 +8,7 @@
       </li>
     </ul>
 
+    <!-- Input field and button for sending new messages -->
     <div>
       <input v-model="newMessageText" type="text" placeholder="Type your message here" @keyup.enter="sendMessage">
       <button @click="sendMessage">Send</button>
@@ -17,6 +19,7 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 
+// Reactive variables for new messages and all messages
 let newMessageText = ref('');
 let allMessages = ref([]);
 
@@ -28,10 +31,11 @@ onMounted(async () => {
 // Function to fetch messages from the API
 async function fetchMessages() {
   try {
+    // Make an API request to fetch messages
     const response = await fetch('https://lab5-p379.onrender.com/api/v1/messages/');
     const data = await response.json();
 
-    // Ensure data is an array before assigning
+    // Ensure data is an array before assigning to allMessages
     if (Array.isArray(data)) {
       allMessages.value = data;
     } else {
@@ -46,11 +50,12 @@ async function fetchMessages() {
 async function sendMessage() {
   if (newMessageText.value.trim() !== '') {
     const newMessage = {
-      user: 'Clueless',
+      user: 'Clueless', // Replace with actual username or get it dynamically
       text: newMessageText.value,
     };
 
     try {
+      // Make an API request to post a new message
       const response = await fetch('https://lab5-p379.onrender.com/api/v1/messages/', {
         method: 'POST',
         headers: {
@@ -59,6 +64,7 @@ async function sendMessage() {
         body: JSON.stringify(newMessage),
       });
 
+      // Parse the response JSON
       const responseData = await response.json();
 
       if (response.ok) {
@@ -77,5 +83,5 @@ async function sendMessage() {
 </script>
 
 <style scoped>
-/* Your styles go here */
+/*  Hier komt styling */
 </style>
