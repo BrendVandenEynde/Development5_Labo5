@@ -2,7 +2,7 @@
   <div>
     <!-- Display messages using a loop -->
     <ul>
-      <li v-for="message in allMessages" :key="message._id">
+      <li v-for="message in reverseMessages" :key="message._id">
         <strong>{{ message.user }}</strong>
         <div>{{ message.text }}</div>
       </li>
@@ -17,7 +17,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 
 // Reactive variables for new messages and all messages
 let newMessageText = ref('');
@@ -80,6 +80,9 @@ async function sendMessage() {
     }
   }
 }
+
+// Computed property to reverse the order of messages
+const reverseMessages = computed(() => allMessages.value.slice().reverse());
 </script>
 
 <style scoped>
